@@ -17,78 +17,61 @@ const slides = [
 	}
 ]
 
-// Déclaration de la variable sur la position 0
+// Initialisation de la position et du nombres de slides
 let position = 0; 
-// Déclaration de la constante du tableau des slides
-const numberOfSlide = slides.length;
+const numberSlides = slides.length;
 
-// appel des fonctions
+// Appel des fonctions
 createDots();
 createCaroussel(position);
 updateDot();
 
-// Cibler les éléments flèches
+// Ciblage des éléments flèches
 const arrowLeft = document.querySelector('.arrow_left');
 const arrowRight = document.querySelector('.arrow_right');
 
-// Event Listener flèche gauche au clic inverse du clic gauche
-arrowLeft.addEventListener("click", function () {
-    if (position == 0) {
-        position = numberOfSlide - 1;
-    }
-    else {
-        position--;
-    }
-        createCaroussel(position);
+// Event listener sur la flèche gauche et la droite pour mise a jour de la position et création du carousel 
+arrowLeft.addEventListener("click", () => {
+    position = (position === 0) ? numberSlides - 1 : position - 1;
+    createCaroussel(position);
 });
 
-// Event listener flèche gauche au clic
-arrowRight.addEventListener("click", function () {
-	// vérifier si la position actuelle est à la dernière diapo
-    if (position == numberOfSlide - 1) {
-        position = 0; // si c'est la cas réinitialiser à la première
-    } else {
-            position++; // si ce n'est pas le cas incrémente de 1
-    }
-    createCaroussel(position); // appel de la fonction carroussel
-
+arrowRight.addEventListener("click", () => {
+    position = (position === numberSlides - 1) ? 0 : position + 1;
+    createCaroussel(position);
 });
 
-// Création des points
+// Création d'une div pour chaque points avec attribution de la class dot à chacun
 function createDots(){
-	const dots = document.querySelector(".dots"); //Cicler dots auquel ajouter les points
-	for (let index = 0; index < slides.length; index++) { // Création de la boucle des diapos
-		const dot= document.createElement("div"); // création d'un élément div pour chaque point
-		dot.setAttribute("class", "dot"); // attribution de la class dot a chaque div
-		dots.appendChild(dot); // ajout de dot à l'élément dots
-	dot.addEventListener("click", function () { // Ajout d'un event au clic pour chaque point
-		position = index; // Définit la position sur celle du point cliqué
-		createCaroussel(position); // Mise à jour du carrousel
-});
-}
-}
+	const dots = document.querySelector(".dots"); 
+	for (let index = 0; index < slides.length; index++) { 
+		const dot= document.createElement("div"); 
+		dot.setAttribute("class", "dot"); 
+		dots.appendChild(dot); 
+	// Ajout d'un event au clic sur chaque point 
+	dot.addEventListener("click", function () { 
+		position = index; 
+		createCaroussel(position); 
+	});
+}};
 
-// Mis à jour du point en cours de visionnage
+// Mise à jour de l'apprence des points en fonction de la position actuelle
 function updateDot() {
-	const listPoints = document.querySelectorAll(".dot"); //Ciblage de tous les éléments dot	
-	for (let index = 0; index < listPoints.length; index++) {
-		const dot = listPoints[index]; // création de la boucle
-	if (index == position){ // vérifier si le point correspond a l'image affichée en cours
-		dot.classList.add('dot_selected'); // Si oui ajout de la classe pour le point en cours	
-	}
-	else{
-		dot.classList.remove('dot_selected'); // suppression de la classe pour tous les autres	 
-	}}};
+    const bulletdots = document.querySelectorAll(".dot");
+    bulletdots.forEach((dot, index) => {
+        dot.classList.toggle('dot_selected', index === position);
+    });
+};
 
-
-// Création du carroussel
-function createCaroussel(position){
-	const element = slides[position]; //Récupère l'élément à la position spécifié
-	const img = document.querySelector(".banner-img"); // Cible l'élément avec la class banner-img
-		img.setAttribute("src" , "./assets/images/slideshow/"+ element.image); // récupère le src
-	const p = document.querySelector("p"); // Cible l'élément p
-		p.innerHTML= element.tagLine; // Change le texte sur l'image
-	updateDot(); // Appel de la fonction de mis a jour des points
+// Mise a jour de l'image et de la légende en fonction de la position actuelle
+function createCaroussel(position) {
+    const { image, tagLine } = slides[position];
+    const img = document.querySelector(".banner-img");
+    img.setAttribute("src", `./assets/images/slideshow/${image}`);
+    img.setAttribute("alt", "Slide Image");
+    const p = document.querySelector("p");
+    p.innerHTML = tagLine;
+    updateDot();
 };
 
 
